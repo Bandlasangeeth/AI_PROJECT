@@ -1,4 +1,5 @@
 import os
+import urllib.request
 import torch
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 from flask_wtf import FlaskForm
@@ -8,7 +9,6 @@ from wtforms import FileField, SubmitField, FloatField, HiddenField
 from wtforms.validators import InputRequired
 from PIL import Image
 from torchvision import transforms
-import io
 
 # Import your existing AdaIN code
 from utils.models import VGGEncoder, Decoder
@@ -22,6 +22,37 @@ app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg'}
 Bootstrap(app)
 
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+# ─────────────────────────────────────────────────────────────────
+# Model download configuration
+# Replace YOUR_HF_USERNAME with your actual Hugging Face username
+# ─────────────────────────────────────────────────────────────────
+HF_USERNAME = "YOUR_HF_USERNAME"   # <-- CHANGE THIS after uploading to HuggingFace
+HF_REPO = "nst-models"
+
+MODEL_FILES = {
+    "vgg_normalised.pth": f"https://huggingface.co/{HF_USERNAME}/{HF_REPO}/resolve/main/vgg_normalised.pth",
+    "experiment/final_exp/decoder_final.pth": f"https://huggingface.co/{HF_USERNAME}/{HF_REPO}/resolve/main/decoder_final.pth",
+}
+
+def download_models():
+    """Download model files if they don't exist locally (for Render deployment)."""
+    for local_path, url in MODEL_FILES.items():
+        if not os.path.exists(local_path):
+            print(f"[INFO] Downloading {local_path} from {url} ...")
+            os.makedirs(os.path.dirname(local_path), exist_ok=True)
+            try:
+                urllib.request.urlretrieve(url, local_path)
+                print(f"[INFO] Downloaded {local_path} successfully.")
+            except Exception as e:
+                print(f"[ERROR] Failed to download {local_path}: {e}")
+                raise
+        else:
+            print(f"[INFO] {local_path} already exists, skipping download.")
+
+# Download models before loading
+download_models()
+
 
 class UploadForm(FlaskForm):
     content = FileField('Content Image')
@@ -145,9 +176,3 @@ def send_example(filename):
 if __name__ == '__main__':
     from werkzeug.serving import run_simple
     run_simple('localhost', 5000, app, use_reloader=True, use_debugger=True)
-
-
-
-
-
-
