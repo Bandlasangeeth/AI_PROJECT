@@ -1,0 +1,36 @@
+# macOS system files
+.DS_Store
+**/.DS_Store
+
+# Python bytecode
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# Uploaded files (runtime generated)
+NST_Code/static/uploads/
+
+# Large model files (too big for GitHub - use Git LFS or download separately)
+NST_Code/vgg_normalised.pth
+NST_Code/experiment/
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# VS Code settings
+.vscode/
+
+# Environment variables
+.env
+
+# Python eggs
+*.egg-info/
+dist/
+build/
