@@ -27,7 +27,7 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 # Model download configuration
 # Replace YOUR_HF_USERNAME with your actual Hugging Face username
 # ─────────────────────────────────────────────────────────────────
-HF_USERNAME = "YOUR_HF_USERNAME"   # <-- CHANGE THIS after uploading to HuggingFace
+HF_USERNAME = "sangeethr04"
 HF_REPO = "nst-models"
 
 MODEL_FILES = {
